@@ -11,10 +11,9 @@ class Post {
     }
 }
 
-
 let posts = localStorage.getItem("posts") ? JSON.parse(localStorage.getItem("posts")) : [
-    new Post("admin", new Date(), "Admin Post 1", "This is an example post."),
-    new Post("admin", new Date(), "Admin Post 2", "This is another example post. This post has much more text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices, sapien sit amet ornare tincidunt, ante felis laoreet ligula, eget aliquam dui nisl at sem. Integer laoreet bibendum sapien ut tincidunt. Nam sed lacus purus. Vivamus at felis enim. Nulla aliquam felis nulla, et molestie lacus elementum nec. Proin non ante lectus. Etiam egestas mauris placerat, consectetur nibh eget, malesuada turpis. Etiam mattis velit lorem, sit amet imperdiet magna consectetur vel. Donec posuere, dui id ornare ornare, odio urna efficitur quam, et commodo nisl nunc id lorem."),
+    new Post("admin", Date.now(), "Admin Post 1", "This is an example post."),
+    new Post("admin", Date.now(), "Admin Post 2", "This is another example post. This post has much more text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices, sapien sit amet ornare tincidunt, ante felis laoreet ligula, eget aliquam dui nisl at sem. Integer laoreet bibendum sapien ut tincidunt. Nam sed lacus purus. Vivamus at felis enim. Nulla aliquam felis nulla, et molestie lacus elementum nec. Proin non ante lectus. Etiam egestas mauris placerat, consectetur nibh eget, malesuada turpis. Etiam mattis velit lorem, sit amet imperdiet magna consectetur vel. Donec posuere, dui id ornare ornare, odio urna efficitur quam, et commodo nisl nunc id lorem."),
 ];
 
 const user = localStorage.getItem("current_user");
@@ -36,11 +35,16 @@ document.addEventListener("DOMContentLoaded", (e) => {
         }
         postsParent.appendChild(postElement);
     });
+
+    localStorage.setItem("posts", JSON.stringify(posts));
 });
 
 document.getElementById("post-form").addEventListener("submit", (e) => {
     let postTitle = document.getElementById("post-title").value;
     let postContent = document.getElementById("post-content").value;
+
+    document.getElementById("post-title").value = "";
+    document.getElementById("post-content").value = "";
 
     if (postTitle.trim() === "") {
         postTitle = "Untitled Post";
@@ -75,6 +79,7 @@ function logout(e) {
 }
 
 function getPostHtml(post) {
+    let date = new Date(post.datetime);
     return `
         <div class="post card" id="${post.id}">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -88,7 +93,7 @@ function getPostHtml(post) {
             </div>
             <div class="card-footer d-flex flex-grow-1 justify-content-between align-items-center">
                 <input type="button" value="Delete" class="btn btn-danger btn-delete" onclick="tryDelete(this)" hidden>
-                <p class="card-text date ms-auto">posted at: ${post.datetime.toLocaleString()}</p>
+                <p class="card-text date ms-auto">posted at: ${date.toLocaleString()}</p>
             </div>
         </div>`.trim();
 }
